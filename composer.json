@@ -1,0 +1,35 @@
+{
+    "name":                                             "darsyn/class-finder",
+    "license":                                          "MIT",
+    "type":                                             "library",
+    "description":                                      "Class Finder by Darsyn for searching for end-user PHP classes.",
+    "autoload": {
+        "psr-4": {
+            "Darsyn\\ClassFinder\\":                    "src/"
+        },
+        "psr-0": {
+            "":                                         "src/"
+        }
+    },
+    "require": {
+        "symfony/finder":                               "~2.3",
+        "php":                                          ">=5.5"
+    },
+    "require-dev": {
+        "symfony/http-kernel":                          "~2.3",
+        "squizlabs/php_codesniffer":                    "@stable",
+        "phpmd/phpmd":                                  "@stable",
+        "phpunit/phpunit":                              "@stable",
+        "phpunit/php-invoker":                          "@stable",
+        "mockery/mockery":                              "@stable",
+        "humbug/humbug":                                "*",
+        "codeception/codeception":                      "@stable",
+        "codeception/verify":                           "@stable",
+        "codeception/specify":                          "@stable"
+    },
+    "suggest": {
+        "symfony/http-kernel": "to search for classes inside bundles registered with AppKernel (Symfony)"
+    },
+    "minimum-stability":                                "dev",
+    "prefer-stable":                                    true
+}

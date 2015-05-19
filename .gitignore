@@ -1,0 +1,9 @@
+/.idea/
+/vendor/
+/build/
+
+# This is never intended to be a top-level project, so don't commit Composer's lock file.
+# See: https://philsturgeon.uk/php/2014/11/04/composer-its-almost-always-about-the-lock-file
+/composer.lock
+# I personally use "/usr/local/bin/composer", but just in case you don't, this one's for you.
+/composer.phar

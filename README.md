@@ -45,8 +45,11 @@ class DefaultController extends Controller
 	{
 		$kernel = $this->container->get('kernel');
 		$finder = new BundleClassFinder($kernel);
-		$containerAwareCommand = 'Symfony\\Bundle\\FrameworkBundle\\Command\\ContainerAwareCommand';
-		$classes = $finder->findClasses('Command', 'Command', $containerAwareCommand);
+		$containerAwareCommands = $finder->findClasses(
+			'Command',
+			'Command',
+			'Symfony\\Bundle\\FrameworkBundle\\Command\\ContainerAwareCommand'
+		);
 	}
 }
 ```

@@ -48,4 +48,26 @@ class TestKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
     }
+
+    /**
+     * Get Cache Directory
+     *
+     * @access public
+     * @return string
+     */
+    public function getCacheDir()
+    {
+        return sys_get_temp_dir();
+    }
+
+    /**
+     * Get Logs Directory
+     *
+     * @access public
+     * @return string
+     */
+    public function getLogDir()
+    {
+        return sys_get_temp_dir();
+    }
 }

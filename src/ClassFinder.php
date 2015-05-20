@@ -150,7 +150,7 @@ class ClassFinder
             $file->getBasename($this->extension))
         );
         // Make sure that the class name has the correct suffix.
-        if (substr($class, 0 - strlen($suffix)) !== $suffix) {
+        if (!empty($suffix) && substr($class, 0 - strlen($suffix)) !== $suffix) {
             throw new \LogicException(sprintf(
                 'The file found at "%s" does not end with the required suffix of "%s".',
                 $file->getRealPath(),

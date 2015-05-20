@@ -32,11 +32,18 @@ class ClassFinder
      * Set Root Directory
      *
      * @access public
+     * @throws \DomainException
      * @param string $directory
      * @return self
      */
     public function setRootDirectory($directory)
     {
+        if (!is_dir($directory)) {
+            throw new \DomainException(sprintf(
+                'The value "%s" defined as the root directory does not exist.',
+                $directory
+            ));
+        }
         $this->directory = $directory;
         return $this;
     }
@@ -113,14 +120,13 @@ class ClassFinder
     {
         $classes = [];
         $subDir = trim(preg_replace('#//{2,}#', '/', strtr($subDir, '\\', '/')), '/');
-        $directory = $this->directory . DIRECTORY_SEPARATOR . strtr($subDir, '/', DIRECTORY_SEPARATOR);
         $namespace = trim($this->namespace, '\\') . '\\' . strtr($subDir, '/', '\\') . '\\';
-        if (!is_dir($directory)) {
-            throw new \DomainException(sprintf(
-                'The value "%s" defined as the root directory does not exist.',
-                $this->directory
-            ));
+        if ($this->directory === null
+            || !is_dir($directory = $this->directory . DIRECTORY_SEPARATOR . strtr($subDir, '/', DIRECTORY_SEPARATOR))
+        ) {
+            return $classes;
         }
+
         $finder = (new Finder)->files()->name(sprintf('*%s', $this->extension))->in($directory);
         foreach ($finder as $file) {
             try {

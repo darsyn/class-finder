@@ -112,7 +112,10 @@ class ClassFinder
         $directory = $this->directory . DIRECTORY_SEPARATOR . strtr($subDir, '/', DIRECTORY_SEPARATOR);
         $namespace = trim($this->namespace, '\\') . '\\' . strtr($subDir, '/', '\\') . '\\';
         if (!is_dir($directory)) {
-            return $classes;
+            throw new \DomainException(sprintf(
+                'The value "%s" defined as the root directory does not exist.',
+                $this->directory
+            ));
         }
         $finder = (new Finder)->files()->name(sprintf('*%s', $this->extension))->in($directory);
         foreach ($finder as $file) {

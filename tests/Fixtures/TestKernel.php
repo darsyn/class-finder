@@ -34,8 +34,7 @@ class TestKernel extends Kernel
     public function registerBundles()
     {
         return [
-            new Bundles\TestOne\TestOneBundle,
-            new Bundles\TestTwo\TestTwoBundle,
+            new Bundle\TestBundle,
         ];
     }
 

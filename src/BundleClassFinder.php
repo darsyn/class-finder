@@ -12,7 +12,7 @@ class BundleClassFinder extends ClassFinder implements BundleAwareInterface
 {
     /**
      * @access protected
-     * @var array
+     * @var \SplObjectStorage
      */
     protected $bundles;
 
@@ -24,6 +24,7 @@ class BundleClassFinder extends ClassFinder implements BundleAwareInterface
      */
     public function __construct(KernelInterface $kernel = null)
     {
+        $this->bundles = new \SplObjectStorage;
         if ($kernel instanceof KernelInterface) {
             $this->setBundles($kernel->getBundles());
         }
@@ -38,7 +39,12 @@ class BundleClassFinder extends ClassFinder implements BundleAwareInterface
      */
     public function setBundles(array $bundles)
     {
-        $this->bundles = $bundles;
+        $this->bundles = new \SplObjectStorage;
+        foreach ($bundles as $bundle) {
+            if ($bundle instanceof BundleInterface) {
+                $this->addBundle($bundle);
+            }
+        }
         return $this;
     }
 
@@ -51,7 +57,7 @@ class BundleClassFinder extends ClassFinder implements BundleAwareInterface
      */
     public function addBundle(BundleInterface $bundle)
     {
-        $this->bundles[] = $bundle;
+        $this->bundles->attach($bundle);
         return $this;
     }
 

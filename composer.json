@@ -6,9 +6,11 @@
     "autoload": {
         "psr-4": {
             "Darsyn\\ClassFinder\\":                    "src/"
-        },
-        "psr-0": {
-            "":                                         "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Darsyn\\ClassFinder\\Tests\\":             "tests/"
         }
     },
     "require": {

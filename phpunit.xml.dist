@@ -16,8 +16,8 @@
 
     <!-- Test Suites. -->
     <testsuites>
-        <testsuite name="Bundle Tests">
-            <directory suffix="Test.php" phpVersion="5.4">src/Tests</directory>
+        <testsuite name="Library Tests">
+            <directory suffix="Test.php" phpVersion="5.4">tests</directory>
         </testsuite>
     </testsuites>
 
@@ -41,7 +41,8 @@
         <whitelist processUncoveredFilesFromWhitelist="false">
             <directory suffix=".php">./src/</directory>
             <exclude>
-                <directory>./src/Tests</directory>
+                <directory>./tests</directory>
+                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

@@ -143,10 +143,11 @@ class ClassFinder
     protected function getFullyQualifiedClassName(SplFileInfo $file, $namespace, $suffix = null, $parent = null)
     {
         // Determine the fully-qualified class name of the found file.
-        $class = preg_replace(
-            '/\\\\{2,}/',
-            '\\',
-            $namespace . $file->getRelativePath() . '\\' . $file->getBasename($this->extension)
+        $class = preg_replace('#\\\\{2,}#', '\\', sprintf(
+            '%s\\%s\\%s',
+            $namespace,
+            strtr($file->getRelativePath(), '/', '\\'),
+            $file->getBasename($this->extension))
         );
         // Make sure that the class name has the correct suffix.
         if (substr($class, 0 - strlen($suffix)) !== $suffix) {

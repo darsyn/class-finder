@@ -157,8 +157,8 @@ class ClassFinder
             '%s\\%s\\%s',
             $namespace,
             strtr($file->getRelativePath(), '/', '\\'),
-            $file->getBasename($this->extension))
-        );
+            $file->getBasename($this->extension)
+        ));
         // Make sure that the class name has the correct suffix.
         if (!empty($suffix) && substr($class, 0 - strlen($suffix)) !== $suffix) {
             throw new \LogicException(sprintf(

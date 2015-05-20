@@ -41,6 +41,17 @@ class ClassFinder
     }
 
     /**
+     * Get Root Directory
+     *
+     * @access public
+     * @return string
+     */
+    public function getRootDirectory()
+    {
+        return $this->directory;
+    }
+
+    /**
      * Set Root Namespace
      *
      * @param $namespace
@@ -53,6 +64,17 @@ class ClassFinder
     }
 
     /**
+     * Get Root Namespace
+     *
+     * @access public
+     * @return string
+     */
+    public function getRootNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
      * Set the file extension to search for (with leading full-stop).
      *
      * @param string $ext
@@ -62,6 +84,17 @@ class ClassFinder
     {
         $this->extension = $ext !== null ? '.' . trim($ext, '.') : '';
         return $this;
+    }
+
+    /**
+     * Get File Extension
+     *
+     * @access public
+     * @return string
+     */
+    public function getExtension()
+    {
+        return $this->extension;
     }
 
     /**

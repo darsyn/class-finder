@@ -68,15 +68,16 @@ class BundleClassFinder extends ClassFinder implements BundleAwareInterface
      * @param string $subDir
      * @param string $suffix
      * @param string $parent
+     * @param boolean $reflection
      * @return array
      */
-    public function findClasses($subDir = null, $suffix = null, $parent = null)
+    public function findClasses($subDir = null, $suffix = null, $parent = null, $reflection = false)
     {
         $classes = [];
         foreach ($this->bundles as $bundle) {
             $this->setRootDirectory($bundle->getPath());
             $this->setRootNamespace($bundle->getNamespace());
-            $classes = array_merge($classes, parent::findClasses($subDir, $suffix, $parent));
+            $classes = array_merge($classes, parent::findClasses($subDir, $suffix, $parent, $reflection));
         }
         return $classes;
     }

@@ -61,15 +61,16 @@ class MultiClassFinder extends ClassFinder
      * @param string $subDir
      * @param string $suffix
      * @param string $parent
+     * @param boolean $reflection
      * @return array
      */
-    public function findClasses($subDir = null, $suffix = null, $parent = null)
+    public function findClasses($subDir = null, $suffix = null, $parent = null, $reflection = false)
     {
         $classes = [];
         foreach ($this->locations as $namespace => $location) {
             $this->setRootDirectory($location);
             $this->setRootNamespace($namespace);
-            $classes = array_merge($classes, parent::findClasses($subDir, $suffix, $parent));
+            $classes = array_merge($classes, parent::findClasses($subDir, $suffix, $parent, $reflection));
         }
         return $classes;
     }

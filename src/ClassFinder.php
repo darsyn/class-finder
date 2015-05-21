@@ -114,9 +114,10 @@ class ClassFinder
      * @param string $subDir
      * @param string $suffix
      * @param string $parent
+     * @param boolean $reflection
      * @return array
      */
-    public function findClasses($subDir = null, $suffix = null, $parent = null)
+    public function findClasses($subDir = null, $suffix = null, $parent = null, $reflection = false)
     {
         $classes = [];
         $subDir = trim(preg_replace('#//{2,}#', '/', strtr($subDir, '\\', '/')), '/');
@@ -130,7 +131,7 @@ class ClassFinder
         $finder = (new Finder)->files()->name(sprintf('*%s', $this->extension))->in($directory);
         foreach ($finder as $file) {
             try {
-                $class = $this->getFullyQualifiedClassName($file, $namespace, $suffix, $parent);
+                $class = $this->getFullyQualifiedClassName($file, $namespace, $suffix, $parent, (bool) $reflection);
                 $classes[] = $class;
             } catch (\Exception $exception) {
                 continue;
@@ -148,10 +149,16 @@ class ClassFinder
      * @param string $namespace
      * @param string $suffix
      * @param string $parent
+     * @param boolean $reflection
      * @return string
      */
-    protected function getFullyQualifiedClassName(SplFileInfo $file, $namespace, $suffix = null, $parent = null)
-    {
+    protected function getFullyQualifiedClassName(
+        SplFileInfo $file,
+        $namespace,
+        $suffix = null,
+        $parent = null,
+        $reflection = false
+    ) {
         // Determine the fully-qualified class name of the found file.
         $class = preg_replace('#\\\\{2,}#', '\\', sprintf(
             '%s\\%s\\%s',
@@ -180,6 +187,6 @@ class ClassFinder
         ) {
             throw new \LogicException(sprintf('The class definition for "%s" is invalid.', $class));
         }
-        return $class;
+        return $reflection ? $reflect : $class;
     }
 }

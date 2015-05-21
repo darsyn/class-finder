@@ -10,6 +10,10 @@ standard without having to manually register each of those classes. Various filt
 - End with custom suffix.
 - Implement or extend a parent class or interface.
 
+Usually an array containing fully-qualified class names (as strings) is returned, but passing `true` as the fourth
+parameter to the `findClasses()` method will return an array of `ReflectionClass` instances instead. Very useful in
+certain situations.
+
 License
 -------
 
@@ -42,7 +46,7 @@ $suffix = 'Entity';
 $parent = 'Framework\\ActiveRecordEntity';
 
 $classes = $finder->findClasses($subDir, $suffix, $parent);
-foreach ($classes = $class) {
+foreach ($classes as $class) {
 	echo $class . "\n";
 }
 

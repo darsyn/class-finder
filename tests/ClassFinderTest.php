@@ -215,4 +215,14 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\ControllerInterface'
         ));
     }
+
+    public function testReflectionObjectsAreReturned()
+    {
+        $finder = new ClassFinder;
+        $finder->setRootDirectory(__DIR__ . '/Fixtures');
+        $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures');
+        $classReflections = $finder->findClasses(null, null, null, true);
+        $this->assertCount(6, $classReflections);
+        $this->assertContainsOnlyInstancesOf('ReflectionClass', $classReflections);
+    }
 }

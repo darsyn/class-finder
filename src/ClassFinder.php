@@ -2,6 +2,7 @@
 
 namespace Darsyn\ClassFinder;
 
+use Darsyn\ClassFinder\Reflection\Class as ReflectionClass;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -115,7 +116,7 @@ class ClassFinder
      * @param string $suffix
      * @param string $parent
      * @param boolean $reflection
-     * @return array
+     * @return \Darsyn\ClassFinder\Reflection\Class|array
      */
     public function findClasses($subDir = null, $suffix = null, $parent = null, $reflection = false)
     {
@@ -150,7 +151,7 @@ class ClassFinder
      * @param string $suffix
      * @param string $parent
      * @param boolean $reflection
-     * @return string
+     * @return \Darsyn\ClassFinder\Reflection\Class|string
      */
     protected function getFullyQualifiedClassName(
         SplFileInfo $file,
@@ -179,7 +180,7 @@ class ClassFinder
         // - For this to work the constructor must not have any required arguments.
         // - And finally make sure that the class loaded was actually loaded from the directory we found it in.
         //   TODO: Make sure that the final check doesn't cause problems with proxy classes.
-        $reflect = new \ReflectionClass($class);
+        $reflect = new ReflectionClass($class, $file->getRelativePath());
         if ((is_object($construct = $reflect->getConstructor()) && $construct->getNumberOfRequiredParameters())
             || $reflect->isAbstract()
             || (is_string($parent) && !empty($parent) && !$reflect->isSubclassOf($parent))

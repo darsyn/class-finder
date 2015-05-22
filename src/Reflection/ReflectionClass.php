@@ -1,11 +1,11 @@
 <?php
 
-namespace Darsyn\ClassFinder\Reflection
+namespace Darsyn\ClassFinder\Reflection;
 
 /**
  * @author Zander Baldwin <hello@zanderbaldwin.com>
  */
-class Class extends \ReflectionClass
+class ReflectionClass extends \ReflectionClass
 {
     /**
      * @access protected

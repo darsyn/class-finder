@@ -2,7 +2,7 @@
 
 namespace Darsyn\ClassFinder;
 
-use Darsyn\ClassFinder\Reflection\Class as ReflectionClass;
+use Darsyn\ClassFinder\Reflection\ReflectionClass;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 

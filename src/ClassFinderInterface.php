@@ -37,7 +37,19 @@ interface ClassFinderInterface
      * @param string $subDir
      * @param string $suffix
      * @param string $parent
+     * @param integer $allowedParameters
      * @return array
      */
-    public function findClasses($subDir = null, $suffix = null, $parent = null);
+    public function findClasses($subDir = null, $suffix = null, $parent = null, $allowedParameters = 0);
+
+    /**
+     * Find Class Reflections
+     *
+     * @param string $subDir
+     * @param string $suffix
+     * @param string $parent
+     * @param integer $allowedParameters
+     * @return array
+     */
+    public function findClassReflections($subDir = null, $suffix = null, $parent = null, $allowedParameters = 0);
 }

@@ -9,7 +9,8 @@ class RequiredConstructorModule
 {
     /**
      * Constructor
-     * This class should never be loaded by the ClassFinder because its constructor has one or more required parameters.
+     * This class should never be loaded by the default ClassFinder because its constructor has one or more required
+     * parameters.
      *
      * @access public
      * @param mixed $requiredParameter

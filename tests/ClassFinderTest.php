@@ -67,7 +67,6 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures');
         $this->assertEquals([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\TestKernel',
-            'Darsyn\\ClassFinder\\Tests\\Fixtures\\ControllerInterface',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\TestBundle',
@@ -216,13 +215,32 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    public function testAllowedParametersSettingWorks()
+    {
+        $finder = new ClassFinder;
+        $finder->setRootDirectory(__DIR__ . '/Fixtures');
+        $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures');
+        $this->assertCount(0, $finder->findClasses('Bundle/Module'));
+        $this->assertCount(1, $finder->findClasses('Bundle/Module', null, null, 1));
+    }
+
     public function testReflectionObjectsAreReturned()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures');
-        $classReflections = $finder->findClasses(null, null, null, true);
-        $this->assertCount(6, $classReflections);
+        $classStrings = $finder->findClasses();
+        $classReflections = $finder->findClassReflections();
+        $this->assertCount(5, $classReflections);
+        $this->assertTrue(count($classStrings) === count($classReflections));
         $this->assertContainsOnlyInstancesOf('ReflectionClass', $classReflections);
+    }
+
+    public function testAbstractTypesAreNotReturned()
+    {
+        $finder = new ClassFinder;
+        $finder->setRootDirectory(__DIR__ . '/Fixtures');
+        $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures');
+        $this->assertCount(0, $finder->findClasses(null, 'Interface'));
     }
 }

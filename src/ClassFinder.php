@@ -109,30 +109,27 @@ class ClassFinder
     }
 
     /**
-     * Find Classes
+     * Find Class Reflections
      *
      * @access public
      * @param string $subDir
      * @param string $suffix
      * @param string $parent
-     * @param boolean $reflection
-     * @return \Darsyn\ClassFinder\Reflection\Class|array
+     * @param integer $allowedParameters
+     * @return array
      */
-    public function findClasses($subDir = null, $suffix = null, $parent = null, $reflection = false)
+    public function findClassReflections($subDir = null, $suffix = null, $parent = null, $allowedParameters = 0)
     {
         $classes = [];
         $subDir = trim(preg_replace('#//{2,}#', '/', strtr($subDir, '\\', '/')), '/');
         $namespace = trim($this->namespace, '\\') . '\\' . strtr($subDir, '/', '\\') . '\\';
-        if ($this->directory === null
-            || !is_dir($directory = $this->directory . DIRECTORY_SEPARATOR . strtr($subDir, '/', DIRECTORY_SEPARATOR))
-        ) {
-            return $classes;
-        }
-
-        $finder = (new Finder)->files()->name(sprintf('*%s', $this->extension))->in($directory);
+        $finder = $this->directory !== null
+               && is_dir($directory = $this->directory . DIRECTORY_SEPARATOR . strtr($subDir, '/', DIRECTORY_SEPARATOR))
+            ? (new Finder)->files()->name(sprintf('*%s', $this->extension))->in($directory)
+            : [];
         foreach ($finder as $file) {
             try {
-                $class = $this->getFullyQualifiedClassName($file, $namespace, $suffix, $parent, (bool) $reflection);
+                $class = $this->getClassReflection($file, $namespace, $suffix, $parent, $allowedParameters);
                 $classes[] = $class;
             } catch (\Exception $exception) {
                 continue;
@@ -142,7 +139,24 @@ class ClassFinder
     }
 
     /**
-     * Get Fully-Qualified Class Name
+     * Find Classes
+     *
+     * @access public
+     * @param string $subDir
+     * @param string $suffix
+     * @param string $parent
+     * @param integer $allowedParameters
+     * @return \Darsyn\ClassFinder\Reflection\Class|array
+     */
+    public function findClasses($subDir = null, $suffix = null, $parent = null, $allowedParameters = 0)
+    {
+        return array_map(function(ReflectionClass $class) {
+            return $class->getName();
+        }, $this->findClassReflections($subDir, $suffix, $parent, $allowedParameters));
+    }
+
+    /**
+     * Get Class Reflection Instance
      *
      * @access protected
      * @throws \LogicException
@@ -150,16 +164,10 @@ class ClassFinder
      * @param string $namespace
      * @param string $suffix
      * @param string $parent
-     * @param boolean $reflection
-     * @return \Darsyn\ClassFinder\Reflection\Class|string
+     * @param integer $allowedParameters
+     * @return \Darsyn\ClassFinder\Reflection\ReflectionClass
      */
-    protected function getFullyQualifiedClassName(
-        SplFileInfo $file,
-        $namespace,
-        $suffix = null,
-        $parent = null,
-        $reflection = false
-    ) {
+    protected function getClassReflection(SplFileInfo $file, $namespace, $suffix, $parent, $allowedParameters) {
         // Determine the fully-qualified class name of the found file.
         $class = preg_replace('#\\\\{2,}#', '\\', sprintf(
             '%s\\%s\\%s',
@@ -181,13 +189,15 @@ class ClassFinder
         // - And finally make sure that the class loaded was actually loaded from the directory we found it in.
         //   TODO: Make sure that the final check doesn't cause problems with proxy classes.
         $reflect = new ReflectionClass($class, $file->getRelativePath());
-        if ((is_object($construct = $reflect->getConstructor()) && $construct->getNumberOfRequiredParameters())
-            || $reflect->isAbstract()
+        if ((is_object($construct = $reflect->getConstructor())
+                && $construct->getNumberOfRequiredParameters() > $allowedParameters
+            )
+            || $reflect->isAbstract() || $reflect->isInterface() || $reflect->isTrait()
             || (is_string($parent) && !empty($parent) && !$reflect->isSubclassOf($parent))
             || $reflect->getFileName() !== $file->getRealPath()
         ) {
             throw new \LogicException(sprintf('The class definition for "%s" is invalid.', $class));
         }
-        return $reflection ? $reflect : $class;
+        return $reflect;
     }
 }

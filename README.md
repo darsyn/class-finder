@@ -95,6 +95,9 @@ services:
         arguments: [ @kernel ]
 ```
 
+**Note:** Remember that the `kernel` service is synthetic, and cannot be used until Symfony injects the correct kernel
+instance into the container.
+
 Authors and Contributing
 ------------------------
 

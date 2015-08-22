@@ -7,7 +7,7 @@ use Darsyn\ClassFinder\MultiClassFinder;
 /**
  * @author Zander Baldwin <hello@zanderbaldwin.com>
  */
-class MultiClassFinderTest extends \PHPUnit_Framework_TestCase
+class MultiClassFinderTest extends ArrayContentsAssertion
 {
     /**
      * Get Locations
@@ -23,19 +23,40 @@ class MultiClassFinderTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    public function testInitialisation()
+    /**
+     * Initialisation
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function initialisation()
     {
         $finder = new MultiClassFinder;
         $this->assertAttributeCount(0, 'locations', $finder);
     }
 
-    public function testConstructorLocations()
+    /**
+     * Constructor Locations
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function constructorLocations()
     {
         $finder = new MultiClassFinder($this->getLocations());
         $this->assertAttributeCount(2, 'locations', $finder);
     }
 
-    public function testSetLocations()
+    /**
+     * Set Locations
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function setLocations()
     {
         $finder = new MultiClassFinder;
         $this->assertAttributeCount(0, 'locations', $finder);
@@ -43,7 +64,14 @@ class MultiClassFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeCount(2, 'locations', $finder);
     }
 
-    public function testAddLocations()
+    /**
+     * Add Locations
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function addLocations()
     {
         $finder = new MultiClassFinder;
         $locations = $this->getLocations();
@@ -56,10 +84,17 @@ class MultiClassFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeCount(count($locations), 'locations', $finder);
     }
 
-    public function testClassesAreFound()
+    /**
+     * Classes Are Found
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function classesAreFound()
     {
         $finder = new MultiClassFinder($this->getLocations());
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Entity\\MyEntity',

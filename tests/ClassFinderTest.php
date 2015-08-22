@@ -8,9 +8,16 @@ use Symfony\Component\Finder\Finder;
 /**
  * @author Zander Baldwin <hello@zanderbaldwin.com>
  */
-class ClassFinderTest extends \PHPUnit_Framework_TestCase
+class ClassFinderTest extends ArrayContentsAssertion
 {
-    public function testDirectory()
+    /**
+     * Directory
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function directory()
     {
         $finder = new ClassFinder;
         $directory = __DIR__;
@@ -20,6 +27,13 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($directory, $finder->getRootDirectory());
     }
 
+    /**
+     * Namespace
+     *
+     * @test
+     * @access public
+     * @return void
+     */
     public function testNamespace()
     {
         $finder = new ClassFinder;
@@ -30,7 +44,14 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($namespace, $finder->getRootNamespace());
     }
 
-    public function testExtension()
+    /**
+     * Extension
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function extension()
     {
         $finder = new ClassFinder;
         $this->assertAttributeEquals('.php', 'extension', $finder);
@@ -45,27 +66,48 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('.' . $ext, $finder->getExtension());
     }
 
-    public function testNonExistentDirectory()
+    /**
+     * Non-existent Directory
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function nonExistentDirectory()
     {
         $finder = new ClassFinder;
         $this->setExpectedException('DomainException');
         $finder->setRootDirectory(__DIR__ . '/non/existent/directory');
     }
 
-    public function testEmptyNamespace()
+    /**
+     * Empty Namespace
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function emptyNamespace()
     {
         $finder = new ClassFinder();
         $finder->setRootDirectory(__DIR__);
         $this->assertEquals([], $finder->findClasses());
     }
 
-    public function testBareClassFinder()
+    /**
+     * Bare Class Finder
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function bareClassFinder()
     {
         $finder = new ClassFinder;
         // We have to search in the Fixtures directory because PHPUnit will double load the TestCases if we find them.
         $finder->setRootDirectory(__DIR__ . '/Fixtures');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\TestKernel',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
@@ -74,7 +116,14 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         ], $finder->findClasses());
     }
 
-    public function testAlternativeExtension()
+    /**
+     * Alternative Extension
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function alternativeExtension()
     {
         // For this test we are using a non-standard file extension that Composer does *NOT* automatically include
         // for us, we have to do it manually.
@@ -84,52 +133,80 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         $finder->setRootDirectory(__DIR__ . '/Fixtures');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures');
         $finder->setExtension('inc.php');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Module\\MyTestModule',
         ], $classes = $finder->findClasses());
 
         $finder->setExtension('.inc.php');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Module\\MyTestModule',
         ], $classes = $finder->findClasses());
     }
 
-    public function testSubDirectory()
+    /**
+     * Sub-directory
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function subDirectory()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures/Bundle');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures\\Bundle');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses('Controllers'));
     }
 
-    public function testSuffix()
+    /**
+     * Suffix
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function suffix()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures/Bundle');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures\\Bundle');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses(null, 'Controller'));
     }
 
-    public function testSubDirectoryAndSuffix()
+    /**
+     * Sub-directory and Suffix
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function subDirectoryAndSuffix()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures/Bundle');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures\\Bundle');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses('Controllers', 'Controller'));
-        $this->assertEquals([], $finder->findClasses('Controller', 'Controller'));
-        $this->assertEquals([], $finder->findClasses('Controller', 'Controllers'));
+        $this->assertSameArrayContents([], $finder->findClasses('Controller', 'Controller'));
+        $this->assertSameArrayContents([], $finder->findClasses('Controller', 'Controllers'));
     }
 
-    public function testNonStandardExtensionAndSuffix()
+    /**
+     * Non-standard Extension and Suffix
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function nonStandardExtensionAndSuffix()
     {
         // For this test we are using a non-standard file extension that Composer does *NOT* automatically include
         // for us, we have to do it manually.
@@ -138,13 +215,20 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         $finder->setRootDirectory(__DIR__ . '/Fixtures');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures');
         $finder->setExtension('.inc.php');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Module\\MyTestModule',
         ], $finder->findClasses(null, 'Module'));
-        $this->assertEquals([], $finder->findClasses(null, 'Controller'));
+        $this->assertSameArrayContents([], $finder->findClasses(null, 'Controller'));
     }
 
-    public function testRootAndSubDirDoTheSameThing()
+    /**
+     * Root and Subdir Do The Same Thing
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function rootAndSubDirDoTheSameThing()
     {
         $relative = 'Bundle';
 
@@ -161,51 +245,79 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\TestBundle',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Entity\\MyEntity',
         ];
-        $this->assertEquals($expected, $rootFinder->findClasses());
-        $this->assertEquals($expected, $relativeFinder->findClasses($relative));
+        $this->assertSameArrayContents($expected, $rootFinder->findClasses());
+        $this->assertSameArrayContents($expected, $relativeFinder->findClasses($relative));
     }
 
-    public function testParent()
+    /**
+     * Parent
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function parent()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\TestKernel',
         ], $finder->findClasses(null, null, 'Symfony\\Component\\HttpKernel\\Kernel'));
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\TestKernel',
         ], $finder->findClasses(null, null, 'Symfony\\Component\\HttpKernel\\KernelInterface'));
     }
 
-    public function testParentAndSuffix()
+    /**
+     * Parent and Suffix
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function parentAndSuffix()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures/Bundle');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures\\Bundle');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses(null, 'Controller', 'Darsyn\\ClassFinder\\Tests\\Fixtures\\ControllerInterface'));
     }
 
-    public function testParentAndSubDir()
+    /**
+     * Parent and Subdir
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function parentAndSubDir()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures/Bundle');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures\\Bundle');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses('Controllers', null, 'Darsyn\\ClassFinder\\Tests\\Fixtures\\ControllerInterface'));
     }
 
-    public function testParentSubDirAndSuffix()
+    /**
+     * Parent, Subdir and Suffix
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function parentSubDirAndSuffix()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures/Bundle');
         $finder->setRootNamespace(__NAMESPACE__ . '\\Fixtures\\Bundle');
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses(
@@ -215,7 +327,14 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    public function testAllowedParametersSettingWorks()
+    /**
+     * Allowed Parameters Setting Works
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function allowedParametersSettingWorks()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures');
@@ -224,7 +343,14 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $finder->findClasses('Bundle/Module', null, null, 1));
     }
 
-    public function testReflectionObjectsAreReturned()
+    /**
+     * Reflection Objects Are Returned
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function reflectionObjectsAreReturned()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures');
@@ -236,7 +362,14 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertContainsOnlyInstancesOf('ReflectionClass', $classReflections);
     }
 
-    public function testAbstractTypesAreNotReturned()
+    /**
+     * Abstract Types Are Not Returned
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function abstractTypesAreNotReturned()
     {
         $finder = new ClassFinder;
         $finder->setRootDirectory(__DIR__ . '/Fixtures');

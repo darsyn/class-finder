@@ -1,4 +1,4 @@
-Darsyn's Class Finder
+Darsyn's Class Finder [![Build Status](https://travis-ci.org/darsyn/class-finder.svg?branch=master)](https://travis-ci.org/darsyn/class-finder)
 =====================
 
 A library for searching for classes in a specific root directory and namespace. Originally intended for searching for

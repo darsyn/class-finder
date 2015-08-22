@@ -9,7 +9,7 @@ use Darsyn\ClassFinder\Tests\Fixtures\TestKernel;
 /**
  * @author Zander Baldwin <hello@zanderbaldwin.com>
  */
-class BundleClassFinderTest extends \PHPUnit_Framework_TestCase
+class BundleClassFinderTest extends ArrayContentsAssertion
 {
     /**
      * Get Booted Kernel
@@ -24,21 +24,42 @@ class BundleClassFinderTest extends \PHPUnit_Framework_TestCase
         return $kernel;
     }
 
-    public function testNoKernelInitialisation()
+    /**
+     * No Kernel Initialisation
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function noKernelInitialisation()
     {
         $finder = new BundleClassFinder;
         $this->assertAttributeInstanceOf('SplObjectStorage', 'bundles', $finder);
         $this->assertAttributeCount(0, 'bundles', $finder);
     }
 
-    public function testKernelInitialisation()
+    /**
+     * Kernel Initialisation
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function kernelInitialisation()
     {
         $finder = new BundleClassFinder($this->getBootedKernel());
         $this->assertAttributeInstanceOf('SplObjectStorage', 'bundles', $finder);
         $this->assertAttributeCount(1, 'bundles', $finder);
     }
 
-    public function testSetAndAddBundles()
+    /**
+     * Set and Add Bundles
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function setAndAddBundles()
     {
         // Test setting the bundles add them to the BundleClassFinder.
         $finder = new BundleClassFinder;
@@ -59,10 +80,17 @@ class BundleClassFinderTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeCount(1, 'bundles', $finder);
     }
 
-    public function testClassesAreFound()
+    /**
+     * Classes Are Found
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function classesAreFound()
     {
         $finder = new BundleClassFinder($this->getBootedKernel());
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\TestBundle',
@@ -70,30 +98,51 @@ class BundleClassFinderTest extends \PHPUnit_Framework_TestCase
         ], $finder->findClasses());
     }
 
-    public function testSubDir()
+    /**
+     * Subdir
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function subdir()
     {
         $finder = new BundleClassFinder($this->getBootedKernel());
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses('Controllers'));
-        $this->assertEquals([], $finder->findClasses('Controller'));
+        $this->assertSameArrayContents([], $finder->findClasses('Controller'));
     }
 
-    public function testSuffix()
+    /**
+     * Suffix
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function suffix()
     {
         $finder = new BundleClassFinder($this->getBootedKernel());
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses(null, 'Controller'));
-        $this->assertEquals([], $finder->findClasses(null, 'Controllers'));
+        $this->assertSameArrayContents([], $finder->findClasses(null, 'Controllers'));
     }
 
-    public function testParent()
+    /**
+     * Parent
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function parent()
     {
         $finder = new BundleClassFinder($this->getBootedKernel());
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses(
@@ -103,10 +152,17 @@ class BundleClassFinderTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    public function testSubDirSuffixAndParent()
+    /**
+     * Subdir, Suffix and Parent
+     *
+     * @test
+     * @access public
+     * @return void
+     */
+    public function subdirSuffixAndParent()
     {
         $finder = new BundleClassFinder($this->getBootedKernel());
-        $this->assertEquals([
+        $this->assertSameArrayContents([
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\SecondaryController',
             'Darsyn\\ClassFinder\\Tests\\Fixtures\\Bundle\\Controllers\\DefaultController',
         ], $finder->findClasses(

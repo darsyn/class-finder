@@ -1,4 +1,4 @@
-Darsyn's Class Finder
+Darsyn's Class Finder [![Build Status](https://travis-ci.org/darsyn/class-finder.svg?branch=master)](https://travis-ci.org/darsyn/class-finder)
 =====================
 
 A library for searching for classes in a specific root directory and namespace. Originally intended for searching for
@@ -94,6 +94,9 @@ services:
         class: Darsyn\ClassFinder\BundleClassFinder
         arguments: [ @kernel ]
 ```
+
+**Note:** Remember that the `kernel` service is synthetic, and cannot be used until Symfony injects the correct kernel
+instance into the container.
 
 Authors and Contributing
 ------------------------

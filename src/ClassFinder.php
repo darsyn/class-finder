@@ -150,7 +150,7 @@ class ClassFinder
      */
     public function findClasses($subDir = null, $suffix = null, $parent = null, $allowedParameters = 0)
     {
-        return array_map(function(ReflectionClass $class) {
+        return array_map(function (ReflectionClass $class) {
             return $class->getName();
         }, $this->findClassReflections($subDir, $suffix, $parent, $allowedParameters));
     }
@@ -167,7 +167,8 @@ class ClassFinder
      * @param integer $allowedParameters
      * @return \Darsyn\ClassFinder\Reflection\ReflectionClass
      */
-    protected function getClassReflection(SplFileInfo $file, $namespace, $suffix, $parent, $allowedParameters) {
+    protected function getClassReflection(SplFileInfo $file, $namespace, $suffix, $parent, $allowedParameters)
+    {
         // Determine the fully-qualified class name of the found file.
         $class = preg_replace('#\\\\{2,}#', '\\', sprintf(
             '%s\\%s\\%s',
@@ -185,9 +186,10 @@ class ClassFinder
         }
         // We have to perform a few checks on the class before we can return it.
         // - It must be an actual class; not interface, abstract or trait types.
-        // - For this to work the constructor must not have any required arguments.
+        // - For this to work the constructor must not have more than the expected number of required parameters.
         // - And finally make sure that the class loaded was actually loaded from the directory we found it in.
-        //   TODO: Make sure that the final check doesn't cause problems with proxy classes.
+        //   TODO: Make sure that the final (file path) check doesn't cause problems with proxy classes or
+        //         bootstraped/compiled class caches.
         $reflect = new ReflectionClass($class, $file->getRelativePath());
         if ((is_object($construct = $reflect->getConstructor())
                 && $construct->getNumberOfRequiredParameters() > $allowedParameters

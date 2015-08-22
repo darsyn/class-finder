@@ -150,7 +150,7 @@ class ClassFinder
      */
     public function findClasses($subDir = null, $suffix = null, $parent = null, $allowedParameters = 0)
     {
-        return array_map(function(ReflectionClass $class) {
+        return array_map(function (ReflectionClass $class) {
             return $class->getName();
         }, $this->findClassReflections($subDir, $suffix, $parent, $allowedParameters));
     }
@@ -167,7 +167,8 @@ class ClassFinder
      * @param integer $allowedParameters
      * @return \Darsyn\ClassFinder\Reflection\ReflectionClass
      */
-    protected function getClassReflection(SplFileInfo $file, $namespace, $suffix, $parent, $allowedParameters) {
+    protected function getClassReflection(SplFileInfo $file, $namespace, $suffix, $parent, $allowedParameters)
+    {
         // Determine the fully-qualified class name of the found file.
         $class = preg_replace('#\\\\{2,}#', '\\', sprintf(
             '%s\\%s\\%s',

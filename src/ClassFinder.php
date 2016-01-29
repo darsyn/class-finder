@@ -9,7 +9,7 @@ use Symfony\Component\Finder\SplFileInfo;
 /**
  * @author Zander Baldwin <hello@zanderbaldwin.com>
  */
-class ClassFinder
+class ClassFinder implements ClassFinderInterface
 {
     /**
      * @access protected

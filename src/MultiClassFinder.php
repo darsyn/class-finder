@@ -5,7 +5,7 @@ namespace Darsyn\ClassFinder;
 /**
  * @author Zander Baldwin <hello@zanderbaldwin.com>
  */
-class MultiClassFinder extends ClassFinder
+class MultiClassFinder extends ClassFinder implements MultiClassFinderInterface
 {
     /**
      * @access protected

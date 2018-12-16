@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "symfony/finder":                               "~2.8|~3.0",
+        "symfony/finder":                               "~2.8|~3.0|~4.0",
         "php":                                          ">=5.4"
     },
     "require-dev": {
@@ -22,7 +22,7 @@
         "symfony/dependency-injection":                 "~2.8|~3.0",
         "symfony/config":                               "~2.8|~3.0",
         "squizlabs/php_codesniffer":                    "@stable",
-        "phpunit/phpunit":                              "@stable"
+        "phpunit/phpunit":                              "^5"
     },
     "suggest": {
         "symfony/http-kernel": "to search for classes inside bundles registered with AppKernel (Symfony)"
